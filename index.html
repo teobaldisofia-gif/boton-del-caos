@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚠️ PROTOCOLO CAOS</title>
+
+<style>
+:root {
+    --rojo: #ff1738;
+    --verde: #00ff9d;
+    --fondo: #050505;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--fondo);
+    color: white;
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+}
+
+/* Efecto de monitor */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,0.025) 4px
+    );
+    pointer-events: none;
+    z-index: 20;
+}
+
+.contenedor {
+    min-height: 100dvh;
+    max-width: 650px;
+    margin: auto;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.etiqueta {
+    color: var(--verde);
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 25px;
+}
+
+h1 {
+    color: var(--rojo);
+    font-size: clamp(30px, 7vw, 52px);
+    text-shadow: 0 0 20px rgba(255,0,40,.6);
+}
+
+.subtitulo {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.boton {
+    margin-top: 35px;
+    padding: 20px 30px;
+    background: var(--rojo);
+    border: 2px solid #ff6677;
+    border-radius: 8px;
+    color: white;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255,0,40,.5);
+    animation: pulso 1.5s infinite;
+}
+
+.boton:active {
+    transform: scale(.95);
+}
+
+@keyframes pulso {
+    50% {
+        box-shadow: 0 0 45px rgba(255,0,40,.9);
+    }
+}
+
+.pantalla {
+    display: none;
+    width: 100%;
+}
+
+.pantalla.activa {
+    display: block;
+}
+
+.terminal {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #444;
+    background: #0b0b0b;
+    text-align: left;
+    min-height: 180px;
+    font-size: 13px;
+    line-height: 2;
+    color: var(--verde);
+}
+
+.error {
+    color: var(--rojo);
+}
+
+.contador {
+    font-size: clamp(110px, 30vw, 190px);
+    font-weight: bold;
+    color: var(--rojo);
+    text-shadow: 0 0 40px red;
+    margin: 20px 0;
+}
+
+.alerta {
+    animation: alarmaVisual .35s infinite;
+}
+
+@keyframes alarmaVisual {
+    0%, 100% {
+        background: #050505;
+    }
+    50% {
+        background: #53000d;
+    }
+}
+
+.glitch {
+    animation: glitch .15s infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+        text-shadow: 3px 0 cyan, -3px 0 red;
+    }
+    25% {
+        transform: translate(-3px, 2px);
+    }
+    50% {
+        transform: translate(3px, -2px);
+        text-shadow: -4px 0 cyan, 4px 0 red;
+    }
+    75% {
+        transform: translate(-2px, -2px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+#explosion {
+    position: fixed;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 30;
+}
+
+.explotar {
+    animation: explosion .8s ease-out;
+}
+
+@keyframes explosion {
+    0% {
+        opacity: 0;
+        background: red;
+    }
+    15% {
+        opacity: 1;
+        background: white;
+    }
+    40% {
+        opacity: .9;
+        background: red;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.resultado {
+    font-size: 24px;
+    line-height: 1.5;
+    margin-top: 30px;
+}
+
+.codigo {
+    color: var(--verde);
+    font-size: 12px;
+    margin-top: 35px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="explosion"></div>
+
+<main class="contenedor">
+
+    <!-- PANTALLA INICIAL -->
+    <section id="inicio" class="pantalla activa">
+
+        <div class="etiqueta">
+            SISTEMA DE SEGURIDAD // NIVEL 99
+        </div>
+
+        <h1>⚠️ ACCESO RESTRINGIDO</h1>
+
+        <p class="subtitulo">
+            Has ingresado a una zona altamente inestable.
+            <br><br>
+            Cualquier interacción puede provocar
+            consecuencias completamente innecesarias.
+        </p>
+
+        <button class="boton" onclick="iniciar()">
+            🔴 NO PRESIONAR
+        </button>
+
+        <p class="codigo">
+            PROTOCOLO CAOS v1.0
+        </p>
+
+    </section>
+
+    <!-- SIMULACIÓN DE SEGURIDAD -->
+    <section id="seguridad" class="pantalla">
+
+        <div class="etiqueta">
+            TERMINAL DE SEGURIDAD
+        </div>
+
+        <h1>ANALIZANDO...</h1>
+
+        <div id="terminal" class="terminal"></div>
+
+    </section>
+
+    <!-- CUENTA REGRESIVA -->
+    <section id="cuenta" class="pantalla">
+
+        <h1 class="glitch">
+            🚨 ALERTA CRÍTICA
+        </h1>
+
+        <p>
+            PROTOCOLO DE AUTODESTRUCCIÓN ACTIVADO
+        </p>
+
+        <div id="contador" class="contador">
+            05
+        </div>
+
+        <p class="error">
+            ⚠️ CANCELACIÓN IMPOSIBLE ⚠️
+        </p>
+
+    </section>
+
+    <!-- RESULTADO -->
+    <section id="final" class="pantalla">
+
+        <div class="etiqueta">
+            OPERACIÓN FINALIZADA
+        </div>
+
+        <h1>💀 SISTEMA DESTRUIDO</h1>
+
+        <div id="resultado" class="resultado"></div>
+
+        <button class="boton" onclick="reiniciar()">
+            🔄 REINICIAR EL CAOS
+        </button>
+
+        <p class="codigo">
+            ERROR IRREVERSIBLE // JAJA-404
+        </p>
+
+    </section>
+
+</main>
+
+<script>
+let audioContext = null;
+let temporizadores = [];
+let ejecutando = false;
+
+const finales = [
+    {
+        emoji: "💀",
+        texto: "Tu motivación para trabajar fue eliminada.",
+        extra: "Productividad restante: 0%"
+    },
+    {
+        emoji: "🧠",
+        texto: "ERROR 404: Inteligencia no encontrada.",
+        extra: "Intentá reiniciar el cerebro."
+    },
+    {
+        emoji: "💸",
+        texto: "Se detectó pobreza extrema en tu cuenta bancaria.",
+        extra: "Saldo emocional: -$999.999"
+    },
+    {
+        emoji: "👽",
+        texto: "Tu dispositivo fue adoptado por extraterrestres.",
+        extra: "Ahora pertenece a la galaxia CUAC-7."
+    },
+    {
+        emoji: "🦆",
+        texto: "PROTOCOLO PATO ACTIVADO.",
+        extra: "CUAC. CUAC. CUAC."
+    }
+];
+
+function mostrar(id) {
+    document.querySelectorAll(".pantalla").forEach(
+        pantalla => pantalla.classList.remove("activa")
+    );
+
+    document.getElementById(id).classList.add("activa");
+}
+
+function esperar(ms) {
+    return new Promise(resolve => {
+        const id = setTimeout(resolve, ms);
+        temporizadores.push(id);
+    });
+}
+
+function sonido(frecuencia = 500, duracion = .15) {
+    if (!audioContext) return;
+
+    try {
+        const oscilador = audioContext.createOscillator();
+        const volumen = audioContext.createGain();
+
+        oscilador.type = "sawtooth";
+        oscilador.frequency.value = frecuencia;
+
+        volumen.gain.setValueAtTime(
+            0.0001,
+            audioContext.currentTime
+        );
+
+        volumen.gain.exponentialRampToValueAtTime(
+            0.08,
+            audioContext.currentTime + .02
+        );
+
+        volumen.gain.exponentialRampToValueAtTime(
+            0.0001,
+            audioContext.currentTime + duracion
+        );
+
+        oscilador.connect(volumen);
+        volumen.connect(audioContext.destination);
+
+        oscilador.start();
+        oscilador.stop(
+            audioContext.currentTime + duracion
+        );
+    } catch (error) {
+        console.log("Audio no disponible");
+    }
+}
+
+async function iniciar() {
+    if (ejecutando) return;
+    ejecutando = true;
+
+    // Activar audio mediante interacción del usuario
+    try {
+        const AudioClass =
+            window.AudioContext || window.webkitAudioContext;
+
+        if (AudioClass) {
+            audioContext = new AudioClass();
+            await audioContext.resume();
+        }
+    } catch (error) {
+        console.log("Audio bloqueado");
+    }
+
+    mostrar("seguridad");
+
+    const terminal = document.getElementById("terminal");
+    terminal.innerHTML = "";
+
+    const mensajes = [
+        ["[SYSTEM] Detectando usuario...", false],
+        ["[SCAN] Analizando actividad sospechosa...", false],
+        ["[WARNING] Usuario no autorizado.", true],
+        ["[ERROR] ACCESO DENEGADO.", true],
+        ["[SYSTEM] Intentando bloquear amenaza...", false],
+        ["[ERROR] BLOQUEO FALLIDO.", true],
+        ["[CRITICAL] Activando protocolo de emergencia...", true],
+        ["[SYSTEM] AUTODESTRUCCIÓN INICIADA.", true]
+    ];
+
+    for (const [mensaje, error] of mensajes) {
+        const linea = document.createElement("div");
+        linea.textContent = "> " + mensaje;
+
+        if (error) {
+            linea.classList.add("error");
+            sonido(250, .12);
+        } else {
+            sonido(700, .05);
+        }
+
+        terminal.appendChild(linea);
+
+        await esperar(650);
+    }
+
+    await esperar(500);
+
+    await cuentaRegresiva();
+}
+
+async function cuentaRegresiva() {
+    mostrar("cuenta");
+
+    document.body.classList.add("alerta");
+
+    const contador = document.getElementById("contador");
+
+    for (let numero = 5; numero >= 1; numero--) {
+        contador.textContent =
+            String(numero).padStart(2, "0");
+
+        sonido(400 + (5 - numero) * 150, .2);
+
+        await esperar(1000);
+    }
+
+    contador.textContent = "00";
+
+    sonido(120, .6);
+
+    document.body.classList.remove("alerta");
+
+    const explosion = document.getElementById("explosion");
+
+    explosion.classList.remove("explotar");
+    void explosion.offsetWidth;
+    explosion.classList.add("explotar");
+
+    await esperar(800);
+
+    mostrarFinal();
+}
+
+function mostrarFinal() {
+    const final =
+        finales[Math.floor(Math.random() * finales.length)];
+
+    const resultado = document.getElementById("resultado");
+    resultado.replaceChildren();
+
+    const emoji = document.createElement("div");
+    emoji.style.fontSize = "65px";
+    emoji.textContent = final.emoji;
+
+    const mensaje = document.createElement("h2");
+    mensaje.textContent = final.texto;
+
+    const extra = document.createElement("p");
+    extra.style.color = "#00ff9d";
+    extra.style.fontSize = "16px";
+    extra.textContent = final.extra;
+
+    resultado.append(emoji, mensaje, extra);
+
+    mostrar("final");
+    ejecutando = false;
+}
+
+function reiniciar() {
+    temporizadores.forEach(clearTimeout);
+    temporizadores = [];
+
+    document.body.classList.remove("alerta");
+
+    if (audioContext) {
+        audioContext.close().catch(() => {});
+        audioContext = null;
+    }
+
+    ejecutando = false;
+    mostrar("inicio");
+}
+</script>
+
+</body>
+</html>
